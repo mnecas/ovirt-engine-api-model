@@ -36,6 +36,9 @@ jobs:
           ref: gh-pages
           path: gh-pages
 
+      - name: Create index page
+        run: create-index-page.sh
+
       - name: Set FOLDER variable according to push branch
         run: |
           if [[ ${GITHUB_REF} == 'refs/heads/master' ]];
