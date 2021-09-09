@@ -19,6 +19,11 @@ jobs:
             java-version: '11'
             distribution: 'adopt'
 
+      - name: Set git defaults
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
+
       - name: Install package dependencies
         run: sudo apt-get install python3-lxml
 
