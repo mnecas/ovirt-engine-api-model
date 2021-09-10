@@ -1,6 +1,16 @@
 name: ovirt-engine-api-model GitHub Actions
 
-on: push
+on:
+  push:
+    branches:
+      - master
+      - model_4.0
+      - model_4.1
+      - model_4.2
+      - model_4.3
+      - model_4.4
+      - model_4.5
+  workflow_dispatch:
 
 env:
   LD_LIBRARY_PATH: /usr/local/opt/curl/lib:$LD_LIBRARY_PATH
