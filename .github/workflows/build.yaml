@@ -36,9 +36,6 @@ jobs:
           ref: gh-pages
           path: gh-pages
 
-      - name: Create index page
-        run: automation/create-index-page.sh
-
       - name: Set FOLDER variable according to push branch
         run: |
           if [[ ${GITHUB_REF} == 'refs/heads/master' ]];
@@ -53,6 +50,9 @@ jobs:
           mkdir -p ./gh-pages/${{env.FOLDER}}/
           cp ./target/generated-html/asciidoctor.css ./gh-pages/${{env.FOLDER}}/asciidoctor.css
           cp ./target/generated-html/model.html ./gh-pages/${{env.FOLDER}}/index.html
+
+      - name: Create index page
+        run: automation/create-index-page.sh
 
       - name: Push changes to gh-pages
         run: |
