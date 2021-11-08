@@ -1,16 +1,6 @@
 name: ovirt-engine-api-model GitHub Actions
 
-on:
-  push:
-    branches:
-      - master
-      - model_4.0
-      - model_4.1
-      - model_4.2
-      - model_4.3
-      - model_4.4
-      - model_4.5
-  workflow_dispatch:
+on: push
 
 env:
   LD_LIBRARY_PATH: /usr/local/opt/curl/lib:$LD_LIBRARY_PATH
@@ -46,16 +36,20 @@ jobs:
           ref: gh-pages
           path: gh-pages
 
-      - name: Create index page
-        run: automation/create-index-page.sh
-
       - name: Set FOLDER variable according to push branch
         run: |
-          if [[ ${GITHUB_REF} == 'refs/heads/master' ]];
+          IFS="/" read _ type value <<<  ${GITHUB_REF}
+          if [[ ${type} == "heads" ]];
           then
-            echo "FOLDER='master'" >> $GITHUB_ENV;
-          else
-            echo "FOLDER=${GITHUB_REF: -3}" >> $GITHUB_ENV;
+            if [[ ${value} == "master" ]]
+            then
+              echo "FOLDER='master'" >> $GITHUB_ENV;
+            else
+              echo "FOLDER=${value: -3}" >> $GITHUB_ENV;
+            fi
+          elif [[ ${type} == "tags" ]]
+          then
+            echo "FOLDER=${value:0:3}" >> $GITHUB_ENV;
           fi
 
       - name: Move created documentation to gh-pages
@@ -63,6 +57,9 @@ jobs:
           mkdir -p ./gh-pages/${{env.FOLDER}}/
           cp ./target/generated-html/asciidoctor.css ./gh-pages/${{env.FOLDER}}/asciidoctor.css
           cp ./target/generated-html/model.html ./gh-pages/${{env.FOLDER}}/index.html
+
+      - name: Create index page
+        run: automation/create-index-page.sh
 
       - name: Push changes to gh-pages
         run: |
